@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+        
+        <link rel="stylesheet" href="https://spiritaxolotl.github.io/css/bootstrap.min.css">
+        <script src="https://spiritaxolotl.github.io/js/bootstrap.min.js"></script>
+        
+        <link rel="stylesheet" href="https://spiritaxolotl.github.io/css/styles.css" type=text/css>
+        
+        <style>
+.text-box[data-disabled="true"]
+{
+    transform : scale(1, 0);
+}
+
+@keyframes loadTextBox
+{
+    from { transform : scale(1, 0); }
+    
+    to { transform : none; }
+}
+        </style>
+    </head>
+    
+    <body class="spaxDayECbody spaxDayEB1">
+        <div id="bg">
+            
+            <div id="textBox" class="text-box flex-container unselectable"></div>
+            
+            <!--For Debugging on mobile --><button onclick="incIndex();" style="position:relative; width:100%; height:250px;">NEXT</button>
+        </div>
+        
+        <script src="https://calmbubbles.github.io/js-plugins/dialogueSys.js"></script>
+        <script>
+let textBox = document.querySelector("#textBox");
+
+var blockedText = [
+    ".",
+    ",",
+    "?",
+    "!",
+    "'",
+    "_"
+];
+
+var peeps = [
+    "yoki",
+    "claire",
+    "aimottle",
+    "zera",
+    "woof",
+    "este",
+    "spax"
+];
+
+var diaSys = new dialogueSys(textBox, blockedText, peeps, "loadTextBox linear", 0.125, "reverse loadTextBox linear", 0.125, "https://spiritaxolotl.github.io/images/faces", "https://spiritaxolotl.github.io/audio/dialogue");
+
+window.onload = () => {
+    diaSys.SetActive(true, () => {
+        diaSys.typeOnBox("This is a dialogue system test.", 1, "claire", "Neutral");
+    });
+};
+        </script>
+        <script src="https://spiritaxolotl.github.io/js/scrollparallax.js"></script>
+    </body>
+</html>

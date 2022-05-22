@@ -87,7 +87,6 @@ function runDia (dialogueCode)
             break;
         case 1:
             diaSys.typeOnBox("It's me, ", 1, "claire", "Neutral", () => {
-                diaSys.lineBreakBox(1);
                 setTimeout(() => { diaSys.typeOnBox("Claire.", 1, "claire", "Neutral", () => { diaNextValid = true; }); }, 750);
             });
             break;

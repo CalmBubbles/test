@@ -58,11 +58,52 @@ var peeps = [
 
 var diaSys = new dialogueSys(textBox, blockedText, peeps, "loadTextBox linear", 0.125, "reverse loadTextBox linear", 0.125, "https://spiritaxolotl.github.io/images/faces", "https://spiritaxolotl.github.io/audio/dialogue");
 
+var diaIndex = 0;
+var diaNextValid = false;
+
 window.onload = () => {
     diaSys.SetActive(true, () => {
-        diaSys.typeOnBox("This is a dialogue system test.", 1, "claire", "Neutral");
+        runDia(diaIndex);
     });
 };
+
+function incIndex ()
+{
+    if (diaNextValid)
+    {
+        diaIndex++;
+        runDia(diaIndex);
+    }
+}
+
+function runDia (dialogueCode)
+{
+    diaNextValid = false;
+    
+    switch (dialogueCode)
+    {
+        case 0:
+            diaSys.typeOnBox("Hey nerds. ", 1, "claire", "Neutral", () => { diaNextValid = true; });
+            break;
+        case 1:
+            diaSys.typeOnBox("It's me, ", 1, "claire", "Neutral", () => {
+                diaSys.lineBreakBox(1);
+                setTimeout(() => { diaSys.typeOnBox("Claire.", 1, "claire", "Neutral", () => { diaNextValid = true; }); }, 750);
+            });
+            break;
+        case 2:
+            diaSys.clearBox();
+            diaSys.typeOnBox("I am now on a poggers website. ", 1, "claire", "Happy", () => { diaNextValid = true; });
+            break;
+        case 3:
+            diaSys.typeOnBox("Woo!", 1, "claire", "Happy", () => { diaNextValid = true; });
+            break;
+        case 4:
+            diaSys.clearBox();
+            diaSys.typeOnBox("Anyways it's time for some fucking debugging.", 1, "claire", "Sigh", () => { diaNextValid = true; });
+            break;
+    }
+}
         </script>
         <script src="https://spiritaxolotl.github.io/js/scrollparallax.js"></script>
     </body>

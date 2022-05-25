@@ -106,7 +106,7 @@ window.onload = () => {
     diaSys.SetActive(true, () => {
         runDia(diaIndex);
         
-        //requestUpdate();
+        requestUpdate();
     });
 };
 
@@ -122,6 +122,8 @@ function requestUpdate ()
 
 function update ()
 {
+    if (sN == 0) return requestUpdate();
+    
     switch (sN)
     {
         case 1:
@@ -167,6 +169,8 @@ function s2 ()
     // 
     // The element can be simply get by using
     // document.querySelector
+    
+    diaSys.clearBox();
     
     diaSys.typeOnBox("Welcome to ", 1, "claire", "Happy", () => { diaSys.textColor = "red"; });
     diaSys.typeOnBox("Hell", 1, "claire", "Happy", () => {

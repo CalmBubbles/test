@@ -77,26 +77,7 @@
         <script>
 let textBox = document.querySelector("#textBox");
 
-var blockedText = [
-    ".",
-    ",",
-    "?",
-    "!",
-    "'",
-    "_"
-];
-
-var peeps = [
-    "yoki",
-    "claire",
-    "aimottle",
-    "zera",
-    "woof",
-    "este",
-    "spax"
-];
-
-var diaSys = new dialogueSys(textBox, blockedText, peeps, "loadTextBox linear", 0.125, "reverse loadTextBox linear", 0.125, "https://spiritaxolotl.github.io/images/faces", "https://spiritaxolotl.github.io/audio/dialogue");
+var diaSys = new dialogueSys(textBox, [".", ",", "?", "!", "'", "_"], ["yoki", "claire", "aimottle", "zera", "woof", "este", "spax"], "loadTextBox linear", 0.125, "reverse loadTextBox linear", 0.125, "https://spiritaxolotl.github.io/images/faces", "https://spiritaxolotl.github.io/audio/dialogue");
 
 var diaIndex = 0;
 var diaNextValid = false;

@@ -1,221 +1,29 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
     <head>
-        <link rel="preload" href="https://spiritaxolotl.github.io/images/faces/claire/Neutral.png" as="image">
-        <link rel="preload" href="https://spiritaxolotl.github.io/images/faces/claire/Happy.png" as="image">
-        <link rel="preload" href="https://spiritaxolotl.github.io/images/faces/claire/Sigh.png" as="image">
-        
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
-        
-        <link rel="stylesheet" href="https://spiritaxolotl.github.io/css/bootstrap.min.css">
-        <script src="https://spiritaxolotl.github.io/js/bootstrap.min.js"></script>
-        
-        <link rel="stylesheet" href="https://spiritaxolotl.github.io/css/styles.css" type=text/css>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
         
         <style>
-.text-box[data-disabled="true"]
+body
 {
-    transform : scale(1, 0);
+    background-color : black;
+    color : white;
+    font-size : 6vw;
 }
 
-@keyframes loadTextBox
+a
 {
-    from { transform : scale(1, 0); }
-    
-    to { transform : none; }
-}
-
-@keyframes shake0
-{
-    0% { transform: translate(-1px, 2px) rotate(1deg); }
-    25% { transform: translate(1px, 1px) rotate(-1deg); }
-    50% { transform: translate(3px, -1px) rotate(-1deg); }
-    70% { transform: translate(-2px, 4px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-
-@keyframes shake1
-{
-    0% { transform: translate(-1px, 3px) rotate(0deg); }
-    25% { transform: translate(2px, -1px) rotate(1deg); }
-    50% { transform: translate(3px, -1px) rotate(1deg); }
-    70% { transform: translate(-2px, 0px) rotate(0deg); }
-    100% { transform: translate(0px, -1px) rotate(-1deg); }
-}
-
-@keyframes shake2
-{
-    0% { transform: translate(-1px, 2px) rotate(-2deg); }
-    25% { transform: translate(-2px, -2px) rotate(-1deg); }
-    50% { transform: translate(1px, 1px) rotate(0deg); }
-    70% { transform: translate(2px, -1px) rotate(0deg); }
-    100% { transform: translate(-1px, 2px) rotate(-1deg); }
-}
-
-@keyframes shake3
-{
-    0% { transform: translate(2px, 1px) rotate(-2deg); }
-    25% { transform: translate(1px, 1px) rotate(-1deg); }
-    50% { transform: translate(0px, -1px) rotate(2deg); }
-    70% { transform: translate(-3px, 1px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
+    display : block;
+    color : cyan;
 }
         </style>
     </head>
     
-    <body class="spaxDayECbody spaxDayEB1">
-        <div id="bg">
-            
-            <div id="textBox" class="text-box flex-container unselectable"></div>
-            
-            <!--For Debugging on mobile <button onclick="incIndex();" style="position:relative; width:100%; height:250px;">NEXT</button>-->
-        </div>
-        
-        <script src="https://calmbubbles.github.io/js-plugins/dialogueSys.js" type="text/javascript"></script>
-        <script type="text/javascript">
-let textBox = document.querySelector("#textBox");
-
-var diaSys = new dialogueSys(textBox, [".", ",", "?", "!", "'", "_"], ["yoki", "claire", "aimottle", "zera", "woof", "este", "spax"], "loadTextBox linear", 0.125, "reverse loadTextBox linear", 0.125, "https://spiritaxolotl.github.io/images/faces", "https://spiritaxolotl.github.io/audio/dialogue");
-
-var diaIndex = 0;
-var diaNextValid = false;
-var sN = 0;
-
-window.onload = () => {
-    diaSys.SetActive(true, () => {
-        runDia(diaIndex);
-        
-        requestUpdate();
-    });
-};
-
-document.addEventListener("keydown", event =>
-{
-    if (event.key == "z") incIndex();
-});
-
-function requestUpdate ()
-{
-    requestAnimationFrame(update.bind(this));
-}
-
-function update ()
-{
-    if (sN == 0) return requestUpdate();
-    
-    switch (sN)
-    {
-        case 1:
-            s1();
-            break;
-        case 2:
-            s2();
-            break;
-    }
-}
-
-function s1 ()
-{
-    // variables are assigned the same way
-    // as css style attributes
-    // 
-    // dialogueSys.textColor = color
-    // dialogueSys.textBg = background
-    // dialogueSys.textStyle = font-style
-    // dialogueSys.textWeight = font-weight
-    
-    diaSys.clearBox();
-    
-    diaSys.typeOnBox("You can now use ", 1, "claire", "Happy", () => { diaSys.textColor = "yellow"; });
-    diaSys.typeOnBox("color, ", 1, "claire", "Happy", () => { diaSys.textColor = "#f0f0f0"; diaSys.textBg = "linear-gradient(red, orange, yellow, green, blue, indigo, violet)"; });
-    diaSys.typeOnBox("background", 1, "claire", "Happy", () => { diaSys.textColor = "inherit"; diaSys.textBg = "none"; diaSys.textStyle = "italic"; });
-    diaSys.typeOnBox(", style ", 1, "claire", "Happy", () => { diaSys.textStyle = "normal";});
-    diaSys.typeOnBox("and ", 1, "claire", "Happy", () => { diaSys.textWeight = "1000"; });
-    diaSys.typeOnBox("weight " , 1, "claire", "Happy", () => { diaSys.textWeight = "normal"; });
-    diaSys.typeOnBox("in text.", 1, "claire", "Happy");
-    
-    setTimeout(() => { requestUpdate(); }, 3000);
-}
-
-function s2 ()
-{
-    // Every text characters are in a span which can be
-    // manipulated
-    // 
-    // The element has an id of `dialogueSysChar_${charIndex}`
-    // charIndex defines a count of characters from start to end
-    // charIndex starts counting from 0
-    // 
-    // The element can be simply get by using
-    // document.querySelector
-    
-    diaSys.clearBox();
-    
-    diaSys.typeOnBox("Welcome to ", 1, "claire", "Happy", () => { diaSys.textColor = "red"; });
-    diaSys.typeOnBox("Hell", 1, "claire", "Happy", () => {
-        
-        // Magik starts here
-        
-        // We set an array of the elements/chars we will use
-        var chars = [
-            document.querySelector("#dialogueSysChar_11"),
-            document.querySelector("#dialogueSysChar_12"),
-            document.querySelector("#dialogueSysChar_13"),
-            document.querySelector("#dialogueSysChar_14"),
-        ];
-        
-        // For each variable in chars
-        for (let i = 0; i < chars.length; i++)
-        {
-            // We need to set the display to inline-block
-            // because inline element cannot be animated
-            chars[i].style.display = "inline-block";
-            
-            // Add the animation
-            chars[i].style.animation = `shake${i} 0.12s infinite`;
-        }
-    });
-}
-
-function incIndex ()
-{
-    if (diaNextValid)
-    {
-        diaIndex++;
-        runDia(diaIndex);
-    }
-}
-
-function runDia (dialogueCode)
-{
-    diaNextValid = false;
-    
-    switch (dialogueCode)
-    {
-        case 0:
-            diaSys.typeOnBox("Hey nerds. ", 1, "claire", "Neutral", () => { diaNextValid = true; });
-            break;
-        case 1:
-            diaSys.typeOnBox("It's me, ", 1, "claire", "Neutral", () => {
-                setTimeout(() => { diaSys.typeOnBox("Claire.", 1, "claire", "Neutral", () => { diaNextValid = true; }); }, 750);
-            });
-            break;
-        case 2:
-            diaSys.clearBox();
-            diaSys.typeOnBox("I am now on a poggers website. ", 1, "claire", "Happy", () => { diaNextValid = true; });
-            break;
-        case 3:
-            diaSys.typeOnBox("Woo!", 1, "claire", "Happy", () => { diaNextValid = true; });
-            break;
-        case 4:
-            diaSys.clearBox();
-            diaSys.typeOnBox("Anyways it's time for some fucking debugging.", 1, "claire", "Sigh", () => { diaNextValid = true; });
-            break;
-    }
-}
-        </script>
-        <script src="https://spiritaxolotl.github.io/js/scrollparallax.js"></script>
+    <body>
+        <a href="dialogue">dialogue</a>
+        <a href="spax-dep-box">spax-dep-box</a>
+        <a href="Vector2">Vector2</a>
     </body>
 </html>

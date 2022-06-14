@@ -8,16 +8,20 @@
         <style>
 body { margin : 0; background : black; }
 
-#text
+#debug
 {
     position : relative;
+    z-index : 69420;
+}
+
+#text
+{
     width : 85vw;
     min-height : 20px;
     padding : 20px;
     background : black;
     color : white;
     font-size : 20px;
-    z-index : 69420;
 }
 
 button
@@ -65,16 +69,18 @@ img
     </head>
     
     <body>
-        <!--<div id="text"></div>
-        
-        <button onclick="test = Vector2.zero()">ZERO</button>
-        <button onclick="test = Vector2.one()">ONE</button>
-        <button onclick="test = new Vector2(Math.random() * 25, Math.random() * 25)">SHIFT</button>
-        <button onclick="test = Vector2.up()">UP</button>
-        <button onclick="test = Vector2.down()">DOWN</button>
-        <button onclick="test = Vector2.left()">LEFT</button>
-        <button onclick="test = Vector2.right()">RIGHT</button>
-        <button onclick="test.Normalize()">NORMALIZE</button>-->
+        <!--<div id="debug">
+            <div id="text"></div>
+            
+            <button onclick="test = Vector2.zero()">ZERO</button>
+            <button onclick="test = Vector2.one()">ONE</button>
+            <button onclick="test = new Vector2(Math.random() * 25, Math.random() * 25)">SHIFT</button>
+            <button onclick="test = Vector2.up()">UP</button>
+            <button onclick="test = Vector2.down()">DOWN</button>
+            <button onclick="test = Vector2.left()">LEFT</button>
+            <button onclick="test = Vector2.right()">RIGHT</button>
+            <button onclick="test.Normalize()">NORMALIZE</button>
+        </div>-->
         
         <div id="scene">
             <img id="obj_bubble" src="https://calmbubbles.github.io/img/icon.png" style="position : relative; display : block; width : 16.6%; margin : auto;">
@@ -163,8 +169,11 @@ function update ()
     obj_bubble.style.left = `${test.x * 4 * obj_bubble.clientWidth / 60}px`;
     obj_bubble.style.top = `${test.y * 4 * obj_bubble.clientWidth / 60}px`;
     
-    let sScale = 0.87 / (speed * speedUp);
+    let sScale = new Vector2(0.87 / testDif.x, 0.87 / testDif.y);
     let sTime = 0.25 / (speed * speedUp);
+    
+    if (sScale.x === Infinity) sScale.x = 0;
+    if (sScale.y === Infinity) sScale.y = 0;
     
     if (testDif.x === 0 && testDif.y === 0)
     {
@@ -173,17 +182,17 @@ function update ()
     }
     else if (testDif.x !== 0 && testDif.y !== 0)
     {
-        obj_bubble.style.transform = `scale(${sScale}, ${sScale})`;
+        obj_bubble.style.transform = `scale(${sScale.y}, ${sScale.x})`;
         obj_bubble.style.transition = `transform ${sTime}s`;
     }
     else if (testDif.x !== 0)
     {
-        obj_bubble.style.transform = `scale(1, ${sScale})`;
+        obj_bubble.style.transform = `scale(1, ${sScale.x})`;
         obj_bubble.style.transition = `transform ${sTime}s`;
     }
     else if (testDif.y !== 0)
     {
-        obj_bubble.style.transform = `scale(${sScale}, 1)`;
+        obj_bubble.style.transform = `scale(${sScale.y}, 1)`;
         obj_bubble.style.transition = `transform ${sTime}s`;
     }
     

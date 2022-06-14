@@ -6,16 +6,18 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
         
         <style>
-body { margin : 0; }
+body { margin : 0; background : black; }
 
 #text
 {
+    position : relative;
     width : 85vw;
     min-height : 20px;
     padding : 20px;
     background : black;
     color : white;
     font-size : 20px;
+    z-index : 69420;
 }
 
 button
@@ -33,7 +35,10 @@ button
     bottom : 0;
     left : 0;
     right : 0;
-    background : gray;
+    animation : 10s bg infinite;
+    background : linear-gradient(rgb(15, 60, 134), rgba(13, 5, 61), rgba(3, 0, 31));
+    background-size : 100% 200%;
+    animation : linear 10s bg infinite;
 }
 
 #scene > *
@@ -47,6 +52,15 @@ img
     image-rendering : crisp-edges;
     image-rendering : pixelated;
     -ms-interpolation-mode : nearest-neighbor;
+}
+
+@keyframes bg
+{
+    0% { background-position : 0% 0%; }
+    
+    50% { background-position : 0% 50%; }
+    
+    100% { background-position : 0% 0%; }
 }
         </style>
     </head>
@@ -64,17 +78,19 @@ img
         <button onclick="test.Normalize()">NORMALIZE</button>-->
         
         <div id="scene">
-            <img src="https://calmbubbles.github.io/img/icon.png" style="display : block; width : 60px;">
-            <img id="e" src="https://calmbubbles.github.io/img/icon.png" style="display : block; width : 60px;">
+            <img id="obj_bubble" src="https://calmbubbles.github.io/img/icon.png" style="position : relative; display : block; width : 16.6%; margin : auto;">
         </div>
         
         <script src="https://blankengine.github.io/js/BlankEngine.js" type="text/javascript"></script>
         <script>
-let text = document.querySelector("#text");
-let obj_bubble = document.querySelector("#e");
+//let text = document.querySelector("#text");
+let obj_bubble = document.querySelector("#obj_bubble");
 var test;
 var axis;
-var speed = 1;
+const speed = 1;
+var speedUp = 1;
+var testOld = new Vector2();
+var testDif = new Vector2();
 
 window.onload = () => {
     test = new Vector2();
@@ -87,26 +103,26 @@ document.addEventListener("keydown", event => {
     {
         case "ArrowUp":
             event.preventDefault();
-            axis.y = -speed;
+            axis.y = -speed * speedUp;
             break;
         case "ArrowDown":
             event.preventDefault();
-            axis.y = speed;
+            axis.y = speed * speedUp;
             break;
         case "ArrowLeft":
             event.preventDefault();
-            axis.x = -speed;
+            axis.x = -speed * speedUp;
             break;
         case "ArrowRight":
             event.preventDefault();
-            axis.x = speed;
+            axis.x = speed * speedUp;
             break;
     }
     
     if (event.key === "Shift")
     {
         event.preventDefault();
-        speed *= 2;
+        speedUp = 2;
     }
 });
 
@@ -125,7 +141,7 @@ document.addEventListener("keyup", event => {
     if (event.key === "Shift")
     {
         event.preventDefault();
-        speed /= 2;
+        speedUp = 1;
     }
 });
 
@@ -136,33 +152,41 @@ function requestUpdate ()
 
 function update ()
 {
-    let testOld = test;
-    var testDif = new Vector2();
+    testOld = new Vector2(test.x, test.y);
     
     test.x += axis.x;
     test.y += axis.y;
     
-    testDif.x = Math.abs(testOld.x - test.x);
-    testDif.y = Math.abs(testOld.y - test.y);
+    testDif = new Vector2(Math.abs(testOld.x - test.x), Math.abs(testOld.y - test.y));
 
     //text.innerHTML = `${test.toString()}<br>${test.magnitude}<br>${test.sqrMagnitude}<br>${test.normalized.toString()}`;
     
-    obj_bubble.style.left = `${test.x * 2}px`;
-    obj_bubble.style.top = `${test.y * 2}px`;
+    obj_bubble.style.left = `${test.x * 4 * obj_bubble.clientWidth / 60}px`;
+    obj_bubble.style.top = `${test.y * 4 * obj_bubble.clientWidth / 60}px`;
     
-    console.clear();
-    console.log(testDif.toString());
+    let sScale = 0.87 / (speed * speedUp);
+    let sTime = 0.25 / (speed * speedUp);
     
-    /*if (test === testOld)
+    if (testDif.x === 0 && testDif.y === 0)
     {
         obj_bubble.style.transform = "none";
-        obj_bubble.style.transition = "transform 0.5s";
+        obj_bubble.style.transition = "transform 0.25s";
     }
-    else if ()
+    else if (testDif.x !== 0 && testDif.y !== 0)
     {
-        obj_bubble.style.transform = "none";
-        obj_bubble.style.transition = "transform 0.5s";
-    }*/
+        obj_bubble.style.transform = `scale(${sScale}, ${sScale})`;
+        obj_bubble.style.transition = `transform ${sTime}s`;
+    }
+    else if (testDif.x !== 0)
+    {
+        obj_bubble.style.transform = `scale(1, ${sScale})`;
+        obj_bubble.style.transition = `transform ${sTime}s`;
+    }
+    else if (testDif.y !== 0)
+    {
+        obj_bubble.style.transform = `scale(${sScale}, 1)`;
+        obj_bubble.style.transition = `transform ${sTime}s`;
+    }
     
     requestUpdate();
 }

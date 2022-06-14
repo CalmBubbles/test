@@ -142,14 +142,15 @@ function update ()
     test.x += axis.x;
     test.y += axis.y;
     
-    testDif.x = Math.abs(test.x - testOld.x);
-    testDif.y = Math.abs(test.y - testOld.y);
+    testDif.x = Math.abs(testOld.x - test.x);
+    testDif.y = Math.abs(testOld.y - test.y);
 
     //text.innerHTML = `${test.toString()}<br>${test.magnitude}<br>${test.sqrMagnitude}<br>${test.normalized.toString()}`;
     
     obj_bubble.style.left = `${test.x * 2}px`;
     obj_bubble.style.top = `${test.y * 2}px`;
     
+    console.clear();
     console.log(testDif.toString());
     
     /*if (test === testOld)

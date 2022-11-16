@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+        
+        <style>
+            *
+            {
+                font-family : "OMORI";
+            }
+            
+            main
+            {
+                display : flex;
+                width : 100%;
+                height : 420px;
+                border-radius : 10px;
+                background : red;
+                color : white;
+                text-align : center;
+                font-size : 240px;
+                transition : all 0.12s;
+                animation : 0.25s mainIn;
+            }
+            
+            div
+            {
+                margin : auto;
+            }
+            
+            button
+            {
+                width : 100%;
+                height : 69px;
+                font-size : 32px;
+                margin-top : 20px;
+                border : 0;
+                border-radius : 20px;
+                background : white;
+                transition : all 0.12s;
+                animation : 0.5s buttonIn;
+            }
+            
+            @font-face
+            {
+                font-family : "OMORI";
+                src : url(OMORI_GAME2.ttf);
+            }
+            
+            @keyframes mainIn
+            {
+                0% { transform : scale(0, 0); }
+                
+                62% { transform : scale(1.12, 1.12); }
+                
+                100% { transform : none; }
+            }
+            
+            @keyframes buttonIn
+            {
+                0%
+                {
+                    transform : translateY(250px);
+                    opacity : 0;
+                    pointer-events : none;
+                }
+                
+                100%
+                {
+                    transform : none;
+                    opacity : 1;
+                    pointer-events : none;
+                }
+            }
+        </style>
+    </head>
+    
+    <body style="background-color: black; margin: 15px">
+        <main><div>SUS</div></main>
+        <button>ඞmogus</button>
+        
+        <script>
+            const main = document.querySelector("main");
+            const div = document.querySelector("div");
+            const button = document.querySelector("button");
+            
+            const min = 1;
+            const max = 36;
+            const iter = 180;
+            const delay = 1 / 60;
+            
+            let active = false;
+            
+            button.onclick = () => {
+                spin();
+            };
+            
+            async function pain (min, max)
+            {
+                let output = Math.round(Math.random() * max);
+                
+                if (output < min || output > max) output = await pain(min, max);
+                
+                return output;
+            }
+            
+            async function spin ()
+            {
+                if (active) return;
+                
+                active = true;
+                
+                main.style.background = "lightblue";
+                div.style.color = "black";
+                button.style.opacity = "0.25";
+                button.style.transform = "translateY(10px)";
+                
+                for (let i = 0; i < iter; i++)
+                {
+                    div.textContent = await pain(min, max);
+                    
+                    if (i != iter - 1) await new Promise(resolve => setTimeout(resolve, delay));
+                }
+
+                
+                main.style.background = "green";
+                div.style.color = "white";
+                
+                await new Promise(resolve => setTimeout(resolve, 250));
+                
+                button.style.opacity = "1"
+                button.style.transform = "none";
+                
+                active = false;
+            }
+        </script>
+    </body>
+</html>

@@ -88,6 +88,7 @@
             
             const min = 1;
             const max = 36;
+            const no = [ 5, 11, 27, 28, 29, 35 ];
             const iter = 180;
             const delay = 1 / 60;
             
@@ -102,6 +103,11 @@
                 let output = Math.round(Math.random() * max);
                 
                 if (output < min || output > max) output = await pain(min, max);
+                
+                for (let i = 0; i < no.length; i++)
+                {
+                    if (output == no[i]) output = await pain(min, max);
+                }
                 
                 return output;
             }

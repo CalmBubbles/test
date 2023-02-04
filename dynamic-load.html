@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+        
+        <style>
+html, body {
+    height : 100%;
+    background : rgb(18, 24, 35);
+    margin : 0;
+    color : white;
+}
+
+#debug
+{
+    background : black;
+    font-size : 16px;
+    padding : 1%;
+    margin : 10px;
+    position : fixed;
+}
+
+#main
+{
+    overflow-wrap : break-word;
+    background : rgba(255, 255, 255, .13);
+    padding : 16px;
+}
+
+#main div
+{
+    min-height : 75px;
+    background : rgba(255, 255, 255, .13);
+    margin-bottom : 8px;
+    border-radius : 10px;
+}
+
+#loading
+{
+    text-align : center;
+    padding : 16px;
+    min-height : 30px;
+}
+        </style>
+    </head>
+    
+    <body>
+        <div id="debug">hi</div>
+        <div id="main"></div>
+        <div id="loading">Loading...</div>
+        
+        <script type="text/javascript">
+const debug = document.querySelector("#debug");
+const body = document.body;
+const main = document.querySelector("#main");
+
+let scrollVar = 0;
+let offset = 0;
+let targetSize = 0;
+let trigger = 0;
+let index = 0;
+let objCount = 0;
+
+function requestUpdate ()
+{
+    requestAnimationFrame(update.bind(this));
+}
+
+async function update ()
+{
+    scrollVar = body.scrollHeight - window.innerHeight;
+    offset = Math.round(window.pageYOffset);
+    targetSize = window.innerHeight * (3 + index);
+    trigger = targetSize - (window.innerHeight * 2);
+    
+    debug.innerHTML = `scrollVar: ${scrollVar}<br> offset: ${offset}<br> targetSize: ${targetSize}<br> trigger: ${trigger}<br> index: ${index}<br> objCount: ${objCount}`;
+    
+    if (main.clientHeight < targetSize) await add();
+    else if (offset >= trigger) index++;
+    
+    requestUpdate();
+}
+
+async function add ()
+{
+    await new Promise(resolve => setTimeout(resolve, (Math.random() + Math.random()) * 50));
+    
+    const newDiv = document.createElement("div");
+    
+    newDiv.style.height = `${Math.random() * 187}px`;
+    
+    main.append(newDiv);
+    
+    objCount++;
+}
+
+requestUpdate();
+        </script>
+    </body>
+</html>

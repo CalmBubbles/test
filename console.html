@@ -22,25 +22,29 @@ body
     background : var(--background);
     color : var(--color);
     font-family : monospace;
-    margin : 0;
+    font-size : 13px;
     height : 100%;
+    margin : 0;
 }
 
 #con
 {
-    display : table;
-    overflow : hidden;
-    overflow-wrap : break-word;
-    width :  calc(100% - 20px);
-    height : calc(100% - 24px);
-    padding : 12px 10px;
+    position : relative;
+    margin : 0 10px;
+    top : 10px;
+    overflow : scroll;
 }
 
-#cout,
-#cin
+#con > div
+{
+    display : table;
+    overflow-wrap : break-word;
+    width : 100%;
+}
+
+#cout
 {
     display : inline;
-    margin : 0;
 }
 
 #cin
@@ -51,7 +55,6 @@ body
 #cout *,
 #cin *
 {
-    overflow : hidden;
     display : inline-block;
     vertical-align : bottom;
     white-space : pre-wrap;
@@ -84,10 +87,10 @@ body
     </head>
     
     <body>
-        <div id="con">
+        <div id="con"><div>
             <span id="cout"></span>
             <span id="cin"></span>
-        </div>
+        </div></div>
         
         <script>
 
@@ -174,24 +177,63 @@ class Program
                 Console.WriteLine(Math.sqrt((parseFloat(input[0]) - parseFloat(input[2])) ** 2 + (parseFloat(input[1]) - parseFloat(input[3])) ** 2));
                 break;
             case "dir":
-                const oneParam = 1 - 2 * (input.length === 2);
-                const x = parseFloat(input[2] ?? 0) - parseFloat(input[0]) * oneParam;
-                const y = parseFloat(input[3] ?? 0) - parseFloat(input[1]) * oneParam;
+                const x = parseFloat(input[0]) - parseFloat(input[2] ?? 0);
+                const y = parseFloat(input[1]) - parseFloat(input[3] ?? 0);
                 const mag = Math.sqrt(x ** 2 + y ** 2);
                 
                 Console.WriteLine(`${(x / mag) || 0} ${(y / mag) || 0}`);
                 break;
+            case "mid":
+                Console.WriteLine(`${(parseFloat(input[0]) + parseFloat(input[2])) * 0.5} ${(parseFloat(input[1]) + parseFloat(input[3])) * 0.5}`);
+                break;
         }
     }
     
-    static async Main ()
+    static #Quad (input)
     {
-        Console.Write("Console> ");
+        switch (input.shift())
+        {
+            case "root":
+                const a = parseFloat(input[0]);
+                const b = parseFloat(input[1]);
+                const det = Math.sqrt(b ** 2 - 4 * a * parseFloat(input[2]));
+                const div = 2 * a;
+                const roots = [
+                    (-b + det) / div,
+                    (-b - det) / div
+                ];
+                
+                let hasRoots = false;
+                
+                for (let i = 0; i < 2; i++)
+                {
+                    const root = roots[i];
+                    
+                    if (Number.isNaN(root)) continue;
+                    
+                    Console.WriteLine(`${i}: ${root}`);
+                    
+                    hasRoots = true;
+                }
+                
+                if (hasRoots) return;
+                
+                Console.WriteLine("No roots found.");
+                break;
+        }
+    }
+    
+    static async #Redraw ()
+    {
+        Console.Write("Console>");
         
         const input = (await Console.ReadLine()).split(" ");
         
         switch (input.shift())
         {
+            case "ver":
+                Console.WriteLine("Calmsole [Version 2024.1a]");
+                break;
             case "clear":
                 Console.Clear();
                 Console.Sleep(200);
@@ -202,6 +244,28 @@ class Program
             case "eval":
                 Console.WriteLine(eval(input.join(" ")));
                 break;
+            case "coinflip":
+                Console.Write("Flipping");
+                
+                for (let i = 0; i < 3; i++)
+                {
+                    Console.Write(".");
+                    Console.Sleep(750);
+                }
+                
+                Console.WriteLine(`\nIt's ${Math.floor(Math.random() * 2) === 0 ? "heads" : "tails"}.\n`);
+                break;
+            case "rolldie":
+                Console.Write("Rolling");
+                
+                for (let i = 0; i < 3; i++)
+                {
+                    Console.Write(".");
+                    Console.Sleep(750);
+                }
+                
+                Console.WriteLine(`\nYou got ${Math.floor(Math.random() * parseInt(input[0] ?? 6)) + 1}.\n`);
+                break;
             case "console":
                 this.#Con(input);
                 break;
@@ -211,13 +275,23 @@ class Program
             case "vec2":
                 this.#Vec2(input);
                 break;
+            case "quad":
+                this.#Quad(input);
+                break;
             case "help":
             case "?":
                 Help.Invoke(input);
                 break;
         }
         
-        this.Main();
+        this.#Redraw();
+    }
+    
+    static Main ()
+    {
+        Console.WriteLine("Calmsole [Version 2024.1a]\n");
+        
+        this.#Redraw();
     }
 }
 
@@ -227,7 +301,7 @@ class Help
     {
         if (input.length === 0)
         {
-            Console.WriteLine("Manages the console's configuration.\n\nSubcommands:\n\tcolor\n\tcreate\n\tinfo\n\tscale\n\ttime\n\turl\n");
+            Console.WriteLine("Manages the console's configuration.\n\nSubcommands:\n\n\tcolor\n\tcreate\n\tinfo\n\tscale\n\ttime\n\turl\n");
             
             return;
         }
@@ -247,10 +321,70 @@ class Help
                 Console.WriteLine("Tells the time since the program started running in milliseconds.");
                 break;
             case "color":
-                Console.WriteLine("Changes the console's color.\n\nconsole color {background}\nconsole color {background}{foreground}\n\n\tbackground - background color of entire console.\n\tforeground - foreground color of entire console and text.\n\nPossible colors:\n\t0 = Black     8 = Gray\n\t1 = Blue      9 = Light Blue\n\t2 = Green     A = Light Green\n\t3 = Aqua      B = Light Aqua\n\t4 = Red       C = Light Red\n\t5 = Purple    D = Light Purple\n\t6 = Yellow    E = Light Yellow\n\t7 = White     F = Bright White\n");
+                Console.WriteLine("Changes the console colors.\n\nconsole color {background}\nconsole color {background}{foreground}\n\n\tbackground - background color of entire console.\n\tforeground - foreground color of entire console and text.\n\nPossible colors:\n\t0 = Black     8 = Gray\n\t1 = Blue      9 = Light Blue\n\t2 = Green     A = Light Green\n\t3 = Aqua      B = Light Aqua\n\t4 = Red       C = Light Red\n\t5 = Purple    D = Light Purple\n\t6 = Yellow    E = Light Yellow\n\t7 = White     F = Bright White\n");
                 break;
             case "create":
                 Console.WriteLine("Creates a new console in another window.");
+                break;
+        }
+    }
+    
+    static #Blink (input)
+    {
+        if (input.length === 0)
+        {
+            Console.WriteLine("Manages the console cursor.\n\nSubcommands:\n\n\tsmooth\n\tspeed\n");
+            
+            return;
+        }
+        
+        switch (input.shift())
+        {
+            case "smooth":
+                Console.WriteLine("Enables smooth cursor animation.\n\nblink smooth {state}\n\n\tstate - state to change to.");
+                break;
+            case "speed":
+                Console.WriteLine("Sets the cursor blink speed.\n\nblink speed {time}\n\n\ttime - blink speed in seconds.");
+                break;
+        }
+    }
+    
+    static #Vec2 (input)
+    {
+        if (input.length === 0)
+        {
+            Console.WriteLine("Provides help with 2D points.\n\nSubcommands:\n\n\tdistance\n\tdir\n");
+            
+            return;
+        }
+        
+        switch (input.shift())
+        {
+            case "distance":
+                Console.WriteLine("Returns the distance between two points.\n\nvec2 distance {x1} {y1} {x2} {y2}\n\n\tx1 - 1st point's x position.\n\ty1 - 1st point's y position.\n\tx2 - 2nd point's x position.\n\ty2 - 2nd point's y position.\n");
+                break;
+            case "dir":
+                Console.WriteLine("Returns the direction of a vector/line.\n\nvec2 dir {x} {y}\nvec2 dir {x} {y} {fromX} {fromY}\n\n\tx - x position.\n\ty - y position\n\tfromX - line origin's x position.\n\tfromY - line origin's y position.");
+                break;
+            case "mid": 
+                Console.WriteLine("Returns the midpoint of two points.\n\nvec2 mid {x1} {y1} {x2} {y2}\n\n\tx1 - 1st point's x position.\n\ty1 - 1st point's y position.\n\tx2 - 2nd point's x position.\n\ty2 - 2nd point's y position.\n");
+                break;
+        }
+    }
+    
+    static #Quad (input)
+    {
+        if (input.length === 0)
+        {
+            Console.WriteLine("Provides help with quadratics/trinomials.\n\nSubcommands:\n\n\troot\n");
+            
+            return;
+        }
+        
+        switch (input.shift())
+        {
+            case "root":
+                Console.WriteLine("Returns the roots of a quadratic.\n\nquad root {a} {b} {c}\n\n\ta - quadratic's a value.\n\tb - quadratic's b value.\n\tc - quadratic's c value.\n");
                 break;
         }
     }
@@ -259,7 +393,7 @@ class Help
     {
         if (input.length === 0)
         {
-            Console.WriteLine("Gives info about certain commands.\n\nhelp {command}\n\n\tcommand - command that needs help.\n\n\nGlobal commands:\n\n\t?\n\tclear\n\tconsole\n\texit\n\thelp\n");
+            Console.WriteLine("Gives info about certain commands.\n\nhelp {command}\n\n\tcommand - command that needs help.\n\n\nGlobal commands:\n\n\t?           vec2\n\tblink\n\tcoinflip\n\tclear\n\tconsole\n\teval\n\texit\n\thelp\n\tquad\n\trolldie\n");
             
             return;
         }
@@ -276,8 +410,25 @@ class Help
             case "exit":
                 Console.WriteLine("Exits the console.");
                 break;
+            case "eval":
+                Console.WriteLine("Evaluates and executes JavaScript code.");
+                break;
+            case "coinflip":
+                Console.WriteLine("Flip a coin, get either heads or tails.");
+            case "rolldie":
+                Console.WriteLine("Roll a dice, get a number from 0-6 or 0 to a number.\n\nrolldie\nrolldie {max}\n\n\tmax - maximum possible number.\n");
+                break;
             case "console":
                 this.#Con(input);
+                break;
+            case "blink":
+                this.#Blink(input);
+                break;
+            case "vec2":
+                this.#Vec2(input);
+                break;
+            case "quad":
+                this.#Quad(input);
                 break;
         }
     }
@@ -363,33 +514,21 @@ class Console
     
     static #SendCout (text)
     {
-        let currentWord = null;
-        
         for (let i = 0; i < text.length; i++)
         {
             const newChar = document.createElement(text[i] === "\n" ? "br" : "span");
             
-            if (text[i] !== "\n" ) newChar.append(text[i]);
+            if (text[i] !== "\n") newChar.append(text[i] === "\t" ? "    " : text[i]);
             
-            if (text[i] !== " " && text[i] !== "\n")
-            {
-                if (currentWord == null) currentWord = document.createElement("span");
-                
-                currentWord.append(newChar);
-            }
-            
-            if (text[i] === " " || text[i] === "\n" || i === text.length - 1)
-            {
-                if (currentWord != null)
-                {
-                    this.#cout.append(currentWord);
-                    
-                    currentWord = null;
-                }
-                
-                if (text[i] === " " || text[i] === "\n") this.#cout.append(newChar);
-            }
+            this.#cout.append(newChar);
         }
+    }
+    
+    static #RecalcHeight ()
+    {
+        const height = window.innerHeight - 20;
+        
+        this.#con.style.height = `${height - 13 + (height % 13)}px`;
     }
     
     static async #CallQueueIterate ()
@@ -467,7 +606,10 @@ class Console
             }
 		});
         
-        this.#con.onclick = () => this.#FocusCin();
+        window.onresize = () => this.#RecalcHeight();
+        window.onclick = () => this.#FocusCin();
+        
+        this.#RecalcHeight();
         
         Program.Main();
     }
